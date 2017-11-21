@@ -1,0 +1,74 @@
+{
+    "message": {
+        "message1": {
+            "type": "message",
+            "value": "This scenario send this message + an extra one",
+            "waiting": 2000,
+            "next": "message2"
+        },
+        "message2": {
+            "type": "message",
+            "value": "The second and last message!"
+        }
+    },
+    "question": {
+        "question": {
+            "type": "question",
+            "value": "This scenatio wait for your input and display a final message",
+            "waiting": 2000,
+            "next": "message"
+        },
+        "message": {
+            "type": "message",
+            "value": "This is the end of this scenario!"
+        }
+    },
+    "choice": {
+        "message": {
+            "type": "message",
+            "value": "This scenario let you choose an item and then depending your choice display the right message",
+            "waiting": 2000,
+            "next": "choice"
+        },
+        "choice": {
+            "type": "choice",
+            "value": "Enter 'yes' or 'no' to continue. You can try 'perhaps' to see what happens when the answer is invalid",
+            "list": ["yes", "no"],
+            "invalid": "Only the proposed answer is accepted",
+            "waiting": 2000,
+            "next": ["end_yes", "end_no"]
+        },
+        "end_yes": {
+            "type": "message",
+            "value": "'YES' chosen. Bye!"
+        },
+        "end_no": {
+            "type": "message",
+            "value": "'NO' chosen. Bye!"
+        }
+    },
+    "routing": {
+        "message": {
+            "type": "message",
+            "value": "This scenario will force to go to the step 'no' even if you entered 'yes'",
+            "waiting": 2000,
+            "next": "choice"
+        },
+        "choice": {
+            "type": "choice",
+            "value": "Enter 'yes' or 'no' to continue. You will be forced to no",
+            "list": ["yes", "no"],
+            "invalid": "Only the proposed answer is accepted",
+            "waiting": 2000,
+            "next": ["end_yes", "end_no"]
+        },
+        "end_yes": {
+            "type": "message",
+            "value": "'YES' chosen. Bye!"
+        },
+        "end_no": {
+            "type": "message",
+            "value": "'NO' chosen. Bye!"
+        }
+    }
+}
