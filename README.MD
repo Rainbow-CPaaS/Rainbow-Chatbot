@@ -71,6 +71,8 @@ chatbot.start();
 
 ```
 
+That's all for the JavaScript part! Now you have to configure your chatbot.
+
 The JSON file `bot.json` contains the configuration file for the Rainbow SDK for Node.JS.
 
 Here is a default configuration file
@@ -113,7 +115,7 @@ Here is a basic sample scenario
             "type": "message",
             "value": "Welcome to this basic scenario",
             "waiting": 2000,
-            "next": "AQuestion"
+            "next": "AChoice"
         },
         "aChoice": {
             "type": "choice",
@@ -240,7 +242,7 @@ You should call the `done()` function in order to continue the scenario. If you 
 
 #### Rerouting
 
-When you call the `done()` function, you can pass in parameter the name of the next action to execute. You scenario will be rerouted to this step and will continue.
+When you call the `done()` function, you can pass a parameter corresponding to the name of the next action to execute. You scenario will be rerouted to this step and will continue.
 
 ```js
 
@@ -256,7 +258,7 @@ chatbot.onMessage((tag, step, content, from, done) => {
 
 ```
 
-In that sample, depending on the step, the user and the answer received, a rerouting is done to the step `special_step`. For other cases, the normal next step will be executed.
+In that sample, depending on the step, the user and the answer received, a rerouting is done to the step `special_step`. For other cases, the normal next step is executed.
 
 
 ### Tickets reporting
