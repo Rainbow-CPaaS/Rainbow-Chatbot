@@ -1,5 +1,7 @@
 # ALE Rainbow ChatBot 
 
+![alt text](./resources/rainbow_bots.png)
+
 Welcome to the Alcatel-Lucent Enterprise **Rainbow ChatBot library**!
 
 The Alcatel-Lucent Enterprise (ALE) Rainbow ChatBot is a JavaScript library for the Rainbow SDK for Node.JS.
