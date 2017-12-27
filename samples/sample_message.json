@@ -2,7 +2,7 @@
     "message": {
         "message1": {
             "type": "message",
-            "value": "This scenario send this message + an extra one",
+            "value": "This scenario sends this message + an extra one",
             "waiting": 2000,
             "next": "message2"
         },
@@ -14,7 +14,7 @@
     "question": {
         "question": {
             "type": "question",
-            "value": "This scenatio wait for your input and display a final message",
+            "value": "This scenario waits for your input and displays a final message",
             "waiting": 2000,
             "next": "message"
         },
@@ -26,7 +26,7 @@
     "choice": {
         "message": {
             "type": "message",
-            "value": "This scenario let you choose an item and then depending your choice display the right message",
+            "value": "This scenario lets you choose an item and then depending your choice displays the right message",
             "waiting": 2000,
             "next": "choice"
         },
@@ -45,6 +45,35 @@
         "end_no": {
             "type": "message",
             "value": "'NO' chosen. Bye!"
+        }
+    },
+    "choice_adv": {
+        "message": {
+            "type": "message",
+            "value": "This scenario lets you choose an item by specifying an other value",
+            "waiting": 2000,
+            "next": "choice"
+        },
+        "choice": {
+            "type": "choice",
+            "value": "Enter 'A', 'B' or 'C' to continue. Others inputs will not been accepted",
+            "list": ["A. Amsterdam", "B. Berlin", "C. Calgary"],
+            "invalid": "Only the proposed answer is accepted",
+            "accept": ["A", "B", "C"],
+            "waiting": 2000,
+            "next": ["amsterdam", "berlin", "calgary"]
+        },
+        "amsterdam": {
+            "type": "message",
+            "value": "Welcome to Amsterdam! Bye"
+        },
+        "berlin": {
+            "type": "message",
+            "value": "Welcome to Berlin! Bye"
+        },
+        "calgary": {
+            "type": "message",
+            "value": "Welcome to Calgary! Bye"
         }
     },
     "routing": {

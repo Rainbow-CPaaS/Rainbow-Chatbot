@@ -29,7 +29,13 @@ class ChoicePlug {
 
                     logger.log("info", LOG_ID + "getNextStep() - Work[" + work.id + "] - has an history value " + message);
     
-                    if(step.list && Array.isArray(step.list)) {
+                    // Check the accept
+                    if(step.accept && Array.isArray(step.accept)) {
+                        let index = step.accept.indexOf(message);
+                        logger.log("info", LOG_ID + "getNextStep() - Work[" + work.id + "] - has a an index response of " + index);
+                        next = step.next[index] || null;
+                    }
+                    else if(step.list && Array.isArray(step.list)) {
                         let index = step.list.indexOf(message);
                         logger.log("info", LOG_ID + "getNextStep() - Work[" + work.id + "] - has a an index response of " + index);
                         next = step.next[index] || null;
@@ -86,24 +92,45 @@ class ChoicePlug {
     isValid(work, step, content, event, logger) {
         logger.log("info", LOG_ID + "isValid() - Work[" + work.id + "] - check answer validity...");
 
+        // Answer is not valid in all cases if list tag is not defined
         if(step.list) {
-            if(step.list.includes(content)) {
-                logger.log("info", LOG_ID + "isValid() - Work[" + work.id + "] - answer is valid");
 
-                return true;
-            }
-            else {
-                logger.log("warn", LOG_ID + "isValid() - Work[" + work.id + "] - answer is not valid", content);
+            // An accept tag is defined - Use it to check the content sent
+            if(step.accept) {
+                // If yes check that the content matches one of the item accepted
+                if (step.accept.includes(content)) {
+                    logger.log("info", LOG_ID + "isValid() - Work[" + work.id + "] - answer is valid (accept)");
+                    return true;
+                } else {
+                    logger.log("warn", LOG_ID + "isValid() - Work[" + work.id + "] - answer is not valid (accept)", content);
 
-                if("invalid" in step) {
-                    event.emit("onSendMessage", {
-                        message: step.invalid,
-                        jid: work.jid,
-                        type: "list"
-                    });
+                    if("invalid" in step) {
+                        event.emit("onSendMessage", {
+                            message: step.invalid,
+                            jid: work.jid,
+                            type: "list"
+                        });
+                    }
+                    return false;
                 }
-
-                return false;
+            } else {
+                // No accept values defined - Use the list to check the content sent
+                if(step.list.includes(content)) {
+                    logger.log("info", LOG_ID + "isValid() - Work[" + work.id + "] - answer is valid (list)");
+                    return true;
+                }
+                else {
+                    logger.log("warn", LOG_ID + "isValid() - Work[" + work.id + "] - answer is not valid", content);
+    
+                    if("invalid" in step) {
+                        event.emit("onSendMessage", {
+                            message: step.invalid,
+                            jid: work.jid,
+                            type: "list"
+                        });
+                    }
+                    return false;
+                }
             }
         }
         else {

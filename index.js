@@ -167,7 +167,10 @@ class RainbowAgent {
 
         // Listen when work has finished a task
         this.events.on("ontaskfinished", (work) => {
-            if (work.state !== Work.STATE.CLOSED && !work.pending) {
+            if (work.state !== Work.STATE.CLOSED && 
+                work.state !== Work.STATE.BLOCKED &&
+                work.state !== Work.STATE.ABORTED &&
+                !work.pending) {
 
                 if(work.external) {
 

@@ -94,24 +94,23 @@ class Queue {
     }
 
     addToQueue(work) {
-        let that = this;
         this._logger.log("debug", LOG_ID + "addToQueue() - Enter");
         this._logger.log("info", LOG_ID + "addToQueue() - Push work for user " + work.jid + "in state " + work.state);
-
         work.queue = true;
 
-        this._queue.push(work, function(err) {
+        this._queue.push(work, (err) => {
             if (err) {
-                that._logger.log("error", LOG_ID + "addToQueue() - Error processing " + work.jid);
+                this._logger.log("error", LOG_ID + "addToQueue() - Error processing " + work.jid);
                 return;
             }
-            that._logger.log("info", LOG_ID + "addToQueue() - Finished work for " + work.jid);
+            this._logger.log("info", LOG_ID + "addToQueue() - Finished work for " + work.jid);
 
             work.queued = false;
 
-            that._event.emit("ontaskfinished", work);
+            this._event.emit("ontaskfinished", work);
             
         });
+
         this._logger.log("debug", LOG_ID + "addToQueue() - Exit");
     }
 } 

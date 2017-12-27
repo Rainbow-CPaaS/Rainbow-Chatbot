@@ -92,6 +92,29 @@ describe('ChoicePlug check validity', function() {
         expect(event.emit).has.been.called.once;
     });
 
+    it('should return true if the content is validated by an accept tag', function() {
+        let work = {"pending": false, "id": "12345", "from": "jid@company.com", "waiting": 0};
+        let step = {"value": "a choice", "waiting": 0, "list": ["a", "b", "c"], "accept": ["d", "e", "f"]};
+        
+        let event = {"emit": chai.spy('emit')};
+        let logger = {"log": chai.spy('log')};
+
+        expect(ChoicePlug.isValid(work, step, "d", event, logger)).is.true;
+        expect(ChoicePlug.isValid(work, step, "e", event, logger)).is.true;
+        expect(ChoicePlug.isValid(work, step, "f", event, logger)).is.true;
+    });
+
+    it('should return false if the content is not validated by an accept tag', function() {
+        let work = {"pending": false, "id": "12345", "from": "jid@company.com", "waiting": 0};
+        let step = {"value": "a choice", "waiting": 0, "list": ["a", "b", "c"], "accept": ["a", "b", "c"]};
+        
+        let event = {"emit": chai.spy('emit')};
+        let logger = {"log": chai.spy('log')};
+
+        expect(ChoicePlug.isValid(work, step, "d", event, logger)).is.false;
+        expect(ChoicePlug.isValid(work, step, "", event, logger)).is.false;
+        expect(ChoicePlug.isValid(work, step, null, event, logger)).is.false;
+    });
 });
 
 describe('ChoicePlug Next', function() {
@@ -180,6 +203,24 @@ describe('ChoicePlug Next', function() {
         work.step = "choice";
         work.history = [{"step": "question", "content": "c"}];
         expect(ChoicePlug.getNextStep(work, step, logger)).is.a("null");
+    });
+
+    it('should return the step "right"', function() {
+        let step = {type: "choice", "list":["A", "B"], "next": ["left", "right"], "accept": ["C", "D"]};
+        let work = {"id": "12345"};
+        let logger = {"log": chai.spy('log')};
+        work.step = "choice";
+        work.history = [{"step": "choice", "content": "D"}];
+        expect(ChoicePlug.getNextStep(work, step, logger)).is.equals("right");
+    });
+
+    it('should return the step "left"', function() {
+        let step = {type: "choice", "list":["Left", "Right"], "next": ["left", "right"], "accept": ["L", "R"]};
+        let work = {"id": "12345"};
+        let logger = {"log": chai.spy('log')};
+        work.step = "choice";
+        work.history = [{"step": "choice", "content": "L"}];
+        expect(ChoicePlug.getNextStep(work, step, logger)).is.equals("left");
     });
 });
 

@@ -407,9 +407,11 @@ This action allows to provide:
 
 - The list of expected answers
 
-- Optionnaly an error message if the answer is not in the list of proposed choice
+- Optionally, an error message if the answer is not in the list of proposed choice
 
-- Optionnaly, a among of time before going to the next step of the scenario
+- Optionally, a among of time before going to the next step of the scenario
+
+- Optionally, a list of accepted answers 
 
 Here is an example of a choice action:
 
@@ -451,7 +453,25 @@ In the following sample, if the user sends `yes`, the next route will be `route_
 
 Note: When using this possibility, you need to take care to have exactly one route defined per expected answer. If not, the user will not be able to reach the end of your scenario.
 
-Note: When forcing the route using the `onMessage()` handler and passing a new route with the function `done(...)`. The forced route will be user prioritary to the route defined in the `next` parameter.
+Note: When forcing the route using the `onMessage()` handler and passing a new route with the function `done(...)`. The forced route will be used prioritary to the route defined in the `next` parameter.
+
+Starting version 1.34.1, you can specify an optional `accept` property to specify the list of values accepted:
+
+```JSON
+
+"aChoice": {
+    "type": "choice",
+    "value": "Choose your route !",
+    "list": ["Choice A", "Choice B", "Choice C"],
+    "accept": ["A", "B", "C"],
+    "invalid": "Only the proposed answers are valid",
+    "waiting": 2000,
+    "next": ["route_to_A", "route_to_B", "route_to_C"]
+},
+
+```
+
+In that sample, the user will receive a list of three items `Choice A`, `Choice B`, `Choice C` and will have to answer by `A`, `B` or `C`. Using this property `accept`, the answer can be different than the proposed ones.
 
 
 ### Samples
