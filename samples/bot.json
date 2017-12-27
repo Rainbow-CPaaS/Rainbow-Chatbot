@@ -4,11 +4,11 @@
         "mode": "xmpp"
     },
     "credentials": {
-        "login": "blowe@westworld.com",
-        "password": "Password_123"
+        "login": "<bot_loginEmail>",
+        "password": "<bot_password>"
     },
     "logs": {
-        "enableConsoleLogs": true,
+        "enableConsoleLogs": false,
         "enableFileLogs": false,
         "file": {
             "path": "/var/tmp/rainbowsdk/",
