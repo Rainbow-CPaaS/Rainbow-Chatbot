@@ -6,24 +6,31 @@ const NodeSDK = require("rainbow-node-sdk");
 const bot = require("./bot.json");          // Load bot identity
 const scenario = require("./sample_message.json");  // Load scenario
 
+let chatbot = null;
+
+// Start the SDK
 let nodeSDK = new NodeSDK(bot);
+nodeSDK.start().then(() => {
+    // Start the bot
+    chatbot = new ChatBot(nodeSDK, scenario);
+    chatbot.start();
 
-// Initialize agent
-let chatbot = new ChatBot(nodeSDK, scenario);
-chatbot.start();
+    chatbot.onMessage((tag, step, content, from, done) => {
+        console.log("::: On answer>", tag, step, content, from);
+    
+        if(tag === "routing" && step === "choice" && content === "yes") {
+            done("end_no");   
+        } else {
+            done();
+        }
+    }, this);
+    
+    chatbot.onTicket((tag, history, from, start, end) => {
+        console.log("::: On ticket>", tag, history, from, start, end);
+    }, this);
 
-chatbot.onMessage((tag, step, content, from, done) => {
-    console.log("::: On answer>", tag, step, content, from);
+});
 
-    if(tag === "routing" && step === "choice" && content === "yes") {
-        done("end_no");   
-    } else {
-        done();
-    }
-}, this);
 
-chatbot.onTicket((tag, history, from, start, end) => {
-    console.log("::: On ticket>", tag, history, from, start, end);
-}, this);
 
 
