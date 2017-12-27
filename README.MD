@@ -8,20 +8,22 @@ The Alcatel-Lucent Enterprise (ALE) Rainbow ChatBot is a JavaScript library for 
 
 Rainbow ChatBot allows to create **chatbot** based on JSON scenario in some lines of codes.
 
-This documentation will help you to use it.
+This documentation will help you to create your first chatbot.
 
 
 ## Preamble
 
-You need to have Node.JS (stable release) installed on your computer and a recent Rainbow SDK for Node.JS.
+You need to have Node.JS (stable release) installed on your computer.
 
-The Rainbow Bots application works on Windows, MacOSX and Linux platforms.
+The Rainbow Bots library works on Windows, MacOSX and Linux platforms.
+
+The Rainbow Bots library installs the SDK for Node.Js automatically.
 
 
 
 ## Install
 
-To install the Rainbow chatbot library, execute the following command
+To install the Rainbow Chatbot library, execute the following command
 
 ```bash
 
@@ -62,12 +64,28 @@ const bot = require("./bot.json");
 // Load the scenario
 const scenario = require("./scenario.json");
 
-// Initialize the SDK
-let nodeSDK = new NodeSDK(bot);
+// Start the SDK
+nodeSDK = new NodeSDK(bot);
+nodeSDK.start().then( () => {
+    // Start the bot
+    chatbot = new ChatBot(nodeSDK, scenario);
+    return chatbot.start();
+}).then( () => {
+    // Do something once the chatbot has been started
+    ...
 
-// Connect the chat bot to the Rainbow SDK and load the scenario
-let chatbot = new ChatBot(nodeSDK, scenario);
-chatbot.start();
+    chatbot.onMessage((tag, step, content, from, done) => {
+        // Do something when an answer is handled by the bot (i.e. change the route)
+        ...
+        done();
+    }, this);
+
+    chatbot.onTicket((tag, history, from, start, end) => {
+        // Do something when a user has completed a scenario
+        ...
+    }, this);
+
+});
 
 ```
 
