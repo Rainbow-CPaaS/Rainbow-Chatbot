@@ -109,8 +109,12 @@ describe('Work setter and getter', function() {
 
     it('should abort the work', function() {
         let work = new Work();
+        work.pending = true;
+        work.waiting = 1000;
         work.abort();
         expect(work.isAborted).is.equal(true);
+        expect(work.pending).is.equal(false);
+        expect(work.waiting).is.equal(0);
     });
 
     it('should block the work', function() {

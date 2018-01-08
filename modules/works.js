@@ -52,6 +52,13 @@ class Works {
         });
     }
 
+    reset() {
+        this._works.forEach((work) => {
+            work.abort();
+            this._event.emit("ontaskfinished", work);
+        });
+    }
+
     getWork(message, scenario) {
 
         let createWork = (jid, tag, from, scenario) => {

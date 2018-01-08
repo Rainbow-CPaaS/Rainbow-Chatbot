@@ -282,6 +282,8 @@ class Work {
 
     abort() {
         this._state = Work.STATE.ABORTED;
+        this._pending = false;
+        this._waiting = 0;
         this.log("warn", LOG_ID + "abort() - Work[" + this._id + "] (state) changed to '" + this._state + "'");
     }
 

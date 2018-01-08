@@ -48,7 +48,24 @@ class RainbowAgent {
         this._callbackTicket = null;
         this._contextTicket = null;
 
+        this._isEnabled = true;
+
         return this;
+    }
+
+    enable() {
+        this._isEnabled = true;
+        this.logger.log("warn", LOG_ID + "enable() - Mode is enabled");
+    }
+
+    disable() {
+        this._isEnabled = false;
+        this.logger.log("warn", LOG_ID + "disable() - Mode is disabled");
+        this._works.reset();
+    }
+
+    get state() {
+        return this._isEnabled;
     }
 
     start() {
@@ -124,78 +141,89 @@ class RainbowAgent {
         this.events.on("onmessagereceived", (msg) => {
             let work = null;
 
-            // Qualify message (check tag)
-            let scenario = that.tags.qualify(msg);
+            if (this._isEnabled) {
 
-            // Get work if exists
-            work = that.works.getWork(msg, scenario);
+                // Qualify message (check tag)
+                let scenario = that.tags.qualify(msg);
 
-            // Add to queue if work 
-            if(!work) {
-                that.logger.log("warn", LOG_ID + "onmessagereceived() - Incorrect message received");
-                return;
-            }
+                // Get work if exists
+                work = that.works.getWork(msg, scenario);
 
-            if(work.queued) {
-                that.logger.log("warn", LOG_ID + "onmessagereceived() - Existing work is running. No user input expected...");
-                return;
-            }
-
-            // Store message if scenario is inProgress
-            if(work.state === Work.STATE.INPROGRESS) {
-
-                if(!this.factory.isValid(work, work.scenario[work.step], msg.value)) {
+                // Add to queue if work 
+                if(!work) {
+                    that.logger.log("warn", LOG_ID + "onmessagereceived() - Incorrect message received");
                     return;
                 }
-                work.historize(msg);
-            }
 
-            that.fireEvent(work, msg).then((routedStep) => {
-
-                if(routedStep) {
-                    // force next step
-                    work.forcedNextStep = routedStep;
+                if(work.queued) {
+                    that.logger.log("warn", LOG_ID + "onmessagereceived() - Existing work is running. No user input expected...");
+                    return;
                 }
 
-                if(work.waiting) {
-                    that.delayer.delay(work);
-                } else {
-                    that.queue.addToQueue(work);
+                // Store message if scenario is inProgress
+                if(work.state === Work.STATE.INPROGRESS) {
+
+                    if(!this.factory.isValid(work, work.scenario[work.step], msg.value)) {
+                        return;
+                    }
+                    work.historize(msg);
                 }
-            });
-        });
 
-        // Listen when work has finished a task
-        this.events.on("ontaskfinished", (work) => {
-            if (work.state !== Work.STATE.CLOSED && 
-                work.state !== Work.STATE.BLOCKED &&
-                work.state !== Work.STATE.ABORTED &&
-                !work.pending) {
+                that.fireEvent(work, msg).then((routedStep) => {
 
-                if(work.external) {
+                    if(routedStep) {
+                        // force next step
+                        work.forcedNextStep = routedStep;
+                    }
 
-                    that.fireEvent(work, null).then((routedStep) => {
-                        
-                        work.external = false;
-
-                        if(routedStep) {
-                            // force next step
-                            work.forcedNextStep = routedStep;
-                        }
-        
-                        if(work.waiting) {
-                            that.delayer.delay(work);
-                        } else {
-                            that.queue.addToQueue(work);
-                        }
-                    });
-
-                } else {
                     if(work.waiting) {
                         that.delayer.delay(work);
                     } else {
                         that.queue.addToQueue(work);
                     }
+                });
+            } else {
+                that.logger.log("warn", LOG_ID + "onmessagereceived() - Input not taken into account. Mode is disabled...");
+            }
+        });
+
+        // Listen when work has finished a task
+        this.events.on("ontaskfinished", (work) => {
+
+            if (work.state !== Work.STATE.CLOSED && 
+                work.state !== Work.STATE.BLOCKED &&
+                work.state !== Work.STATE.ABORTED &&
+                !work.pending) {
+
+                if(that._isEnabled) {
+                    if(work.external) {
+
+                        that.fireEvent(work, null).then((routedStep) => {
+                            
+                            work.external = false;
+    
+                            if(routedStep) {
+                                // force next step
+                                work.forcedNextStep = routedStep;
+                            }
+            
+                            if(work.waiting) {
+                                that.delayer.delay(work);
+                            } else {
+                                that.queue.addToQueue(work);
+                            }
+                        });
+    
+                    } else {
+                        if(work.waiting) {
+                            that.delayer.delay(work);
+                        } else {
+                            that.queue.addToQueue(work);
+                        }
+                    }
+                }
+                else {
+                    that.logger.log("warn", LOG_ID + "onmessagereceived() - Input not taken into account. Mode is disabled...");
                 }
             }
             else {
@@ -203,7 +231,7 @@ class RainbowAgent {
                     that.logger.log("info", LOG_ID + "ontaskfinished() - Work[" + work.id + "] is waiting for incoming inputs...");
                 }
                 else {
-                    that.logger.log("info", LOG_ID + "ontaskfinished() - Work [" + work.id + "] is closed");
+                    that.logger.log("info", LOG_ID + "ontaskfinished() - Work [" + work.id + "] is closed, blocked or aborted");
 
                     work.endedOn = new Date();
 
