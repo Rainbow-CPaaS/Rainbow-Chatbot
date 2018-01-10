@@ -52,10 +52,17 @@ class Works {
         });
     }
 
-    reset() {
+    purge() {
         this._works.forEach((work) => {
-            work.abort();
-            this._event.emit("ontaskfinished", work);
+            // purge opened tickets from the base when chatbot is stopped
+            if( work.state === Work.STATE.INPROGRESS ||
+                work.state === Work.STATE.NEW ||
+                work.state === Work.STATE.BLOCKED ||
+                work.state === Work.STATE.TERMINATED) {
+                
+                work.abort();
+                this._event.emit("ontaskfinished", work);
+            }
         });
     }
 

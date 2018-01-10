@@ -61,7 +61,7 @@ class RainbowAgent {
     disable() {
         this._isEnabled = false;
         this.logger.log("warn", LOG_ID + "disable() - Mode is disabled");
-        this.works.reset();
+        this.works.purge();
     }
 
     get state() {
@@ -130,7 +130,7 @@ class RainbowAgent {
     }
 
     fireTicketEvent(work) {
-        this._callbackTicket.call(this._contextTicket, work.tag, work.history, work.from, work.createdOn, work.endedOn);
+        this._callbackTicket.call(this._contextTicket, work.tag, work.history, work.from, work.createdOn, work.endedOn, work.state);
     }
 
     addPostListener() {
