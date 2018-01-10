@@ -61,7 +61,7 @@ class RainbowAgent {
     disable() {
         this._isEnabled = false;
         this.logger.log("warn", LOG_ID + "disable() - Mode is disabled");
-        this._works.reset();
+        this.works.reset();
     }
 
     get state() {
