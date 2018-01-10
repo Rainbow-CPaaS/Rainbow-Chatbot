@@ -130,7 +130,7 @@ class RainbowAgent {
     }
 
     fireTicketEvent(work) {
-        this._callbackTicket.call(this._contextTicket, work.tag, work.history, work.from, work.createdOn, work.endedOn, work.state);
+        this._callbackTicket.call(this._contextTicket, work.tag, work.history, work.from, work.createdOn, work.endedOn, work.state, work.id);
     }
 
     addPostListener() {

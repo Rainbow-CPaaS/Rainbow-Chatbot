@@ -80,7 +80,7 @@ nodeSDK.start().then( () => {
         done();
     }, this);
 
-    chatbot.onTicket((tag, history, from, start, end, state) => {
+    chatbot.onTicket((tag, history, from, start, end, state, id) => {
         // Do something when a user has completed a scenario
         ...
     }, this);
@@ -289,7 +289,7 @@ If you want to listen to tickets generated, you have to add the following code:
 
 ```js
 
-chatbot.onTicket((tag, history, from, startdate, enddate, state) => {
+chatbot.onTicket((tag, history, from, startdate, enddate, state, id) => {
     // Do something with the ticket
     ...
 }, this);
@@ -309,6 +309,9 @@ This callback will receive:
 - `enddate`: The date when the scenario has finished for this user
 
 - `state`: The state of the ticket. The possible values are `CLOSED` when the scenario has been finished successfully or `ABORTED` if the scenario didn't reach the last step.
+
+- `id`: The unique identifier of the ticket.
+
 
 #### Tickets storage
 

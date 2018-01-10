@@ -28,8 +28,8 @@ nodeSDK.start().then( () => {
         }
     }, this);
     
-    chatbot.onTicket((tag, history, from, start, end, state) => {
-        console.log("::: On ticket>", tag, history, from, start, end, state);
+    chatbot.onTicket((tag, history, from, start, end, state, id) => {
+        console.log("::: On ticket>", tag, history, from, start, end, state, id);
     }, this);
 });
 
