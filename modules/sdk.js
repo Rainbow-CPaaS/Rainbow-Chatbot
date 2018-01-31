@@ -28,8 +28,7 @@ class SDK {
 
     listenToSDKError() {
         this._nodeSDK.events.once("rainbow_onerror", (jsonMessage) => {
-            this._logger.log("debug", LOG_ID + "start() - Error!");
-            reject(jsonMessage);
+            this._logger.log("debug", LOG_ID + "listenToSDKError() - Error!", jsonMessage);
         });
     }
 
