@@ -152,6 +152,11 @@ Here is a basic sample scenario
 
 ```
 
+To test you chatbot, open your Rainbow client (be carreful to use the same environment: Sandbox or Production), find your bot user and send him a message.
+
+For example, to play the `aMessage` scenario, open the conversation with the bot and send the message `#aMessage`.
+
+
 ### Scenario
 
 A scenario is composed of:
