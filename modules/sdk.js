@@ -34,22 +34,26 @@ class SDK {
 
     listenToIncomingMessage() {
         this._nodeSDK.events.on("rainbow_onmessagereceived", (message) => {
-            this._nodeSDK.im.markMessageAsRead(message);
+    
+            // Do not deal with messages sent by the bot or the bot identity connected in web, mobile...
+            if(!message.cc) {
+                this._nodeSDK.im.markMessageAsRead(message);
 
-            this.getContact(message.fromJid).then(contact => {
-                let msg = new Message({
-                    type: Message.MESSAGE_TYPE.MESSAGE,
-                    jid: message.fromJid,
-                    from: contact,
-                    value: message.content,
-                    lang: message.lang,
-                    date: new Date()
+                this.getContact(message.fromJid).then(contact => {
+                    let msg = new Message({
+                        type: Message.MESSAGE_TYPE.MESSAGE,
+                        jid: message.fromJid,
+                        from: contact,
+                        value: message.content,
+                        lang: message.lang,
+                        date: new Date()
+                    });
+
+                    this._logger.log("debug", LOG_ID + "listenToIncomingMessage() - Received " + msg.type);
+                    
+                    this._event.emit("onmessagereceived", msg);
                 });
-
-                this._logger.log("debug", LOG_ID + "listenToIncomingMessage() - Received " + msg.type);
-                
-                this._event.emit("onmessagereceived", msg);
-            });
+            }
         });
 
         this._nodeSDK.events.on("rainbow_onmessagereceiptreceived", (receipt) => {
