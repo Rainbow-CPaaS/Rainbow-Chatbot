@@ -1,6 +1,7 @@
 "use strict";
 
 const cuid = require("cuid");
+const CircularJSON = require('circular-json');
 
 const LOG_ID = "WORK - ";
 
@@ -154,7 +155,7 @@ class Work {
 
     set from(user) {
         this._from = user;
-        this.log("info", LOG_ID + "from() - Work[" + this._id + "] (from) changed to '" + JSON.stringify(user) + "'");
+        this.log("info", LOG_ID + "from() - Work[" + this._id + "] (from) changed to '" + CircularJSON.stringify(user) + "'");
     }
 
     set pending(isPending) {
