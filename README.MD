@@ -106,6 +106,11 @@ Here is a default configuration file
         "login": "<your login>",
         "password": "<your password>"
     },
+    // Application identifier
+    "application": {
+        "appID": "", 
+        "appSecret": "", 
+    },
     "logs": {
         "enableConsoleLogs": true,
         "enableFileLogs": false,
