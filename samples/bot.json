@@ -1,21 +1,47 @@
 {
-    "rainbow": {
-        "host": "sandbox.openrainbow.com",
-        "mode": "xmpp"
-    },
-    "credentials": {
-        "login": "<bot_loginEmail>",
-        "password": "<bot_password>"
-    },
-    "logs": {
-        "enableConsoleLogs": false,
-        "enableFileLogs": false,
-        "file": {
-            "path": "/var/tmp/rainbowsdk/",
-            "level": "debug"
-        }
-    },
-    "im": {
-        "sendReadReceipt": false
+  "rainbow": {
+    //        "host": "official",                      // Can be "sandbox" (developer platform), "official" or any other hostname when using dedicated AIO
+    "host": "sandbox"                      // Can be "sandbox" (developer platform), "official" or any other hostname when using dedicated AIO
+  },
+  "credentials": {
+    "login": "<bot_loginEmail>",  // The Rainbow email account to use
+    "password": "<bot_password>"   // The Rainbow associated password to use
+  },
+  // Application identifier
+
+  "application": {
+    "appID": "91...93", // Need to create your own application on the hub.openrainbow.com platform
+    "appSecret": "2ML...1m"
+  },
+  // */
+
+  // Proxy configuration
+  /*"proxy": {
+      "host": "xx.xx.xx.xx",
+      "port": 8080,
+      "protocol": "http"
+  }, // */
+
+  // Logs options
+  "logs": {
+    "enableConsoleLogs": true,              // Default: true
+    "enableFileLogs": false,                // Default: false
+    "color": true,
+    "level": "info",
+    "customLabel": "ChatBot",
+    "system-dev": {
+      "internals": false,
+      "http": false
+    }, // */
+    "file": {
+      "path": "c:/temp/",     // Default path used
+      "customFileName": "R-SDK-Node-ChatBot",
+      //"level": 'info',                    // Default log level used
+      "zippedArchive" : false
     }
+  },
+  // IM options
+  "im": {
+    "sendReadReceipt": false   // True to send the 'read' receipt automatically
+  }
 }

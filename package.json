@@ -1,6 +1,6 @@
 {
   "name": "rainbow-chatbot",
-  "version": "1.40.0",
+  "version": "1.50.0",
   "description": "Rainbow ChatBot library for the Rainbow SDK for Node.JS",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "circular-json": "^0.5.4",
+    "comment-json": "^1.1.3",
     "cuid": "^2.1.0",
     "moment": "^2.20.1",
     "rainbow-node-sdk": "^1.40.1",
