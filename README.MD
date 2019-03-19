@@ -109,14 +109,23 @@ Here is a default configuration file
     // Application identifier
     "application": {
         "appID": "", 
-        "appSecret": "", 
+        "appSecret": "" 
     },
     "logs": {
         "enableConsoleLogs": true,
         "enableFileLogs": false,
+        "color": true,
+        "level": "debug",
+        "customLabel": "<your login>>",
+        "system-dev": {
+          "internals": true,
+          "http": true
+        }, 
         "file": {
             "path": "/var/tmp/chatbot/",
-            "level": "debug"
+            "customFileName": "R-SDK-Node-ChatBot",
+            "level": "debug",
+            "zippedArchive" : false
         }
     },
     "im": {
@@ -159,7 +168,7 @@ Here is a basic sample scenario
 
 To test you chatbot, open your Rainbow client (be carreful to use the same environment: Sandbox or Production), find your bot user and send him a message.
 
-For example, to play the `aMessage` scenario, open the conversation with the bot and send the message `#aMessage`.
+For example, to play the `aMessage` scenario, open the conversation with the bot and send the message `#aScenario`.
 
 
 ### Scenario
