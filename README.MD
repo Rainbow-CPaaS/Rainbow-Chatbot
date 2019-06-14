@@ -147,7 +147,7 @@ Here is a basic sample scenario
             "type": "message",
             "value": "Welcome to this basic scenario",
             "waiting": 2000,
-            "next": "AChoice"
+            "next": "aChoice"
         },
         "aChoice": {
             "type": "choice",
