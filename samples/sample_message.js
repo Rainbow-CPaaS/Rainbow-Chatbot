@@ -28,14 +28,14 @@ nodeSDK.start().then( () => {
 }).then( () => {
     chatbot.onMessage((tag, step, content, from, done) => {
         console.log("::: On answer>", tag, step, content, from);
-    
+
         if(tag === "routing" && step === "choice" && content === "yes") {
-            done("end_no");   
+            done("end_no");
         } else {
             done();
         }
     }, this);
-    
+
     chatbot.onTicket((tag, history, from, start, end, state, id) => {
         console.log("::: On ticket>", tag, history, from, start, end, state, id);
     }, this);

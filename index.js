@@ -21,17 +21,17 @@ class RainbowAgent {
         process.on("uncaughtException", (err) => {
             console.error(err);
         });
-        
+
         process.on("warning", (err) => {
             console.error(err);
         });
-        
+
         process.on("unhandledRejection", (err) => {
             console.error(err);
         });
 
         // Initialize component
-        this.logger = new Logger().log;
+        this.logger = Logger;
         this.events = new EventEmitter();
         this.queue = new Queue();
         this.tags = new Tags(tags);
@@ -77,7 +77,7 @@ class RainbowAgent {
         this.logger.log("info", LOG_ID + "welcome() - v" + pkg.version);
 
         this.logger.log("info", LOG_ID + "start() - Start services...");
-    
+
         this.sdk.start(this.events, this.logger).then(() => {
         }).then(() => {
             return that.delayer.start(that.events, that.logger);
@@ -91,11 +91,11 @@ class RainbowAgent {
             return that.works.start(that.events, that.logger, that.factory);
         }).then(() => {
             that.logger.log("info", LOG_ID + "start() - All services started succesfully!");
-    
+
             that.logger.log("info", LOG_ID + "start() - Ready to listen incoming requests...");
-    
+
             that.addPostListener();
-    
+
         }).catch((err) => {
             that.logger.log("error", LOG_ID + "start() - Error starting", err);
         });
@@ -149,7 +149,7 @@ class RainbowAgent {
                 // Get work if exists
                 work = that.works.getWork(msg, scenario);
 
-                // Add to queue if work 
+                // Add to queue if work
                 if(!work) {
                     that.logger.log("warn", LOG_ID + "onmessagereceived() - Incorrect message received");
                     return;
@@ -190,7 +190,7 @@ class RainbowAgent {
         // Listen when work has finished a task
         this.events.on("ontaskfinished", (work) => {
 
-            if (work.state !== Work.STATE.CLOSED && 
+            if (work.state !== Work.STATE.CLOSED &&
                 work.state !== Work.STATE.BLOCKED &&
                 work.state !== Work.STATE.ABORTED &&
                 !work.pending) {
@@ -199,21 +199,21 @@ class RainbowAgent {
                     if(work.external) {
 
                         that.fireEvent(work, null).then((routedStep) => {
-                            
+
                             work.external = false;
-    
+
                             if(routedStep) {
                                 // force next step
                                 work.forcedNextStep = routedStep;
                             }
-            
+
                             if(work.waiting) {
                                 that.delayer.delay(work);
                             } else {
                                 that.queue.addToQueue(work);
                             }
                         });
-    
+
                     } else {
                         if(work.waiting) {
                             that.delayer.delay(work);
@@ -243,7 +243,7 @@ class RainbowAgent {
         this.events.on('ontaskexternal', (work) => {
 
             that.fireEvent(work, null).then((routedStep) => {
-                
+
                 if(routedStep) {
                     // force next step
                     work.forcedNextStep = routedStep;

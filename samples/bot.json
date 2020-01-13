@@ -42,6 +42,12 @@
   },
   // IM options
   "im": {
-    "sendReadReceipt": false   // True to send the 'read' receipt automatically
+    "sendReadReceipt": false,   // True to send the 'read' receipt automatically
+    "messageMaxLength": 1024,
+    "sendMessageToConnectedUser": true,
+    "conversationsRetrievedFormat": "small",
+    "storeMessages": false,
+    "nbMaxConversations": 15,
+    "rateLimitPerHour": 1000
   }
 }
