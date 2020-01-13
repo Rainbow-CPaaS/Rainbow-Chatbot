@@ -129,7 +129,13 @@ Here is a default configuration file
         }
     },
     "im": {
-        "sendReadReceipt": false
+        "sendReadReceipt": false,
+        "messageMaxLength": 1024,
+        "sendMessageToConnectedUser": true,
+        "conversationsRetrievedFormat": "small",
+        "storeMessages": false,
+        "nbMaxConversations": 15,
+        "rateLimitPerHour": 1000
     }
 }
 
