@@ -89,6 +89,22 @@ nodeSDK.start().then( () => {
 
 ```
 
+### Options
+
+ChatBot constructor allow to specify the amount of concurrent works and/or the maximum treatment duration of a work in second, thanks to the third option parameter:
+
+```js
+let options = { 
+    queue: { 
+        concurrency : 10, // default is 1
+        maxTaskDuration: 300 // default is null ( no timeout ), minimum 60 seconds
+        }
+    };
+
+new ChatBot(nodeSDK, scenario, options);
+
+```
+
 That's all for the JavaScript part! Now you have to configure your chatbot.
 
 The JSON file `bot.json` contains the configuration file for the Rainbow SDK for Node.JS.

@@ -16,7 +16,7 @@ const LOG_ID = "CHATBOT - ";
 
 class RainbowAgent {
 
-    constructor(nodeSDK, tags) {
+    constructor(nodeSDK, tags, options) {
 
         process.on("uncaughtException", (err) => {
             console.error(err);
@@ -31,6 +31,7 @@ class RainbowAgent {
         });
 
         // Initialize component
+        this.options = options;
         this.logger = Logger;
         this.events = new EventEmitter();
         this.queue = new Queue();
@@ -84,20 +85,20 @@ class RainbowAgent {
         }).then(() => {
             return that.factory.start(that.events, that.logger);
         }).then(() => {
-            return that.queue.start(that.events, that.logger, that.lm);
+            return that.queue.start(that.events, that.logger, that.options);
         }).then(() => {
             return that.tags.start(that.events, that.logger);
         }).then(() => {
             return that.works.start(that.events, that.logger, that.factory);
         }).then(() => {
-            that.logger.log("info", LOG_ID + "start() - All services started succesfully!");
+            that.logger.log("info", LOG_ID + "start() - All services started successfully!");
 
             that.logger.log("info", LOG_ID + "start() - Ready to listen incoming requests...");
 
             that.addPostListener();
 
         }).catch((err) => {
-            that.logger.log("error", LOG_ID + "start() - Error starting", err);
+            that.logger.log("error", LOG_ID + "start() - Error starting " + err);
         });
     }
 

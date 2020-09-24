@@ -24,25 +24,6 @@ describe('Delayer starting', function() {
     });
 });
 
-describe('check that a log is written', function() {
-    
-    it('should not use the console.log when no logger defined', function() {
-        let delayer = new Delayer();
-        let spy = chai.spy.on(console, 'log');
-        delayer.log("level", "message", null);
-        expect(spy).to.be.called;
-        spy = null;
-    });
-
-    it('should use the logger when defined', function() {
-        let logger = {log: chai.spy('log')};
-        let delayer = new Delayer();
-        expect(delayer.start(null, logger)).to.be.fulfilled;
-        delayer.log("level", "message", null);
-        expect(logger.log).to.be.called;
-    });
-});
-
 describe('Delayer should delay a work', function() {
 
     it('should store a work during 2000ms', function() {

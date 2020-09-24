@@ -83,7 +83,11 @@ class Factory {
 
     execute(work, step) {
         if(step.type in this._action) {
-            this._action[step.type].execute(work, step, this._event, this._logger);
+            try {
+                this._action[step.type].execute(work, step, this._event, this._logger);
+            } catch( err ) {
+                this.log("error", LOG_ID + "execute() - work " + work.id + ", at step " + step.type + "experienced an error: ", err);
+            }
         }
         else {
             work.pending = false;

@@ -28,26 +28,6 @@ describe('Tags start', function() {
     });
 });
 
-describe('check that a log is written', function() {
-    
-    let spy = null;
-    it('should use the loger if defined', function() {
-        let tags = new Tags();
-        spy = chai.spy.on(console, 'log');
-        tags.log("level", "message", null);
-        expect(spy).to.be.called;
-    });
-
-    it('should not used the loger if defined', function() {
-        let logger = {log: chai.spy('log')};
-        let work = new Tags();
-        expect(work.start(null, logger)).to.be.fulfilled;
-        work.log("level", "message", null);
-        expect(logger.log).to.be.called;
-        spy = null;
-    });
-});
-
 describe('Tags definition', function() {
     it('should return true if a tag is in the list', function() {
         let json = {"tag_a": {}, "tag_b": {}};

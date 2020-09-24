@@ -10,13 +10,8 @@ chai.use(chaiAsPromised);
 describe('Logger', function() {
 
     it('should create a logger', function() {
-        let logger = new Logger();
+        let logger = Logger;
         expect(logger).is.a('object');
-    });
-
-    it('should get the internal winston logger', function() {
-        let logger = new Logger();
-        expect(logger.log).is.a('object');
     });
 
 });

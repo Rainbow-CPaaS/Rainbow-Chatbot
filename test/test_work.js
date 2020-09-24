@@ -314,26 +314,6 @@ describe('check if the scenario is finished', function() {
     });
 });
 
-
-describe('check that a log is written', function() {
-
-    let spy = null;
-    it('should use the loger if defined', function() {
-        let work = new Work();
-        spy = chai.spy.on(console, 'log');
-        work.log("level", "message", null);
-        expect(spy).to.be.called;
-    });
-
-    it('should not used the loger if defined', function() {
-        let logger = {log: chai.spy('log')};
-        let work = new Work(null, logger, null);
-        work.log("level", "message", null);
-        expect(logger.log).to.be.called;
-        spy = null;
-    });
-});
-
 describe ('check that execute function is well done', function() {
 
     it('should execute an undefined work', function() {

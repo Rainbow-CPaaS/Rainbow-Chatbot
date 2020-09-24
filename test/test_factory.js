@@ -6,6 +6,10 @@ let spies = require('chai-spies');
 
 chai.use(spies);
 
+beforeEach( function() {
+    chai
+})
+
 describe('Factory constructor', function() {
     it('should create a Factory', function() {
         let factory = new Factory();
@@ -62,25 +66,6 @@ describe('Factory should check the validity', function() {
             expect(plugins.plug.isValid).to.be.called.once;
         });
     });
-
-describe('check that a log is written', function() {
-    
-    it('should not use the console.log when no logger defined', function() {
-        let factory = new Factory();
-        let spy = chai.spy.on(console, 'log');
-        factory.log("level", "message", null);
-        expect(spy).to.be.called;
-        spy = null;
-    });
-
-    it('should use the logger when defined', function() {
-        let logger = {log: chai.spy('log')};
-        let factory = new Factory(null, logger, null);
-        expect(factory.start(null, logger)).to.be.fulfilled;
-        factory.log("level", "message", null);
-        expect(logger.log).to.be.called;
-    });
-});
 
 describe('Find next step', function() {
     

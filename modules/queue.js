@@ -12,10 +12,10 @@ class Queue {
         this._event = null;
         this._logger = null;
         this._queue = null;
-        this._lm = null;
+        this._options = null;
     }
 
-    start(event, logger, lm) {
+    start(event, logger, options) {
 
         let that = this;
 
@@ -23,7 +23,7 @@ class Queue {
             that._logger = logger;
             that._logger.log("debug", LOG_ID + "start() - Enter");
             that._event = event;
-            that._lm = lm;
+            that._options = options;
             that.createQueue();
             that._logger.log("debug", LOG_ID + "start() - Exit");
             resolve();
@@ -36,7 +36,7 @@ class Queue {
 
         this._logger.log("debug", LOG_ID + "createQueue() - Enter");
 
-        this._queue = async.queue(function(work, callback) {
+        this._queue = async.queue(function (work, callback) {
             that._logger.log("info", LOG_ID + "createQueue() - Executing next work");
             that.executeWork(work).then(() => {
                 callback(null);
@@ -44,9 +44,25 @@ class Queue {
                 that._logger.log("error", LOG_ID + "createQueue() - Error", err);
                 callback(err);
             });
-        }, 1);
+        }, (this._options && this._options.queue && this._options.queue.concurrency) ? this._options.queue.concurrency : 1);
+
+        this._queue.drain(() => {
+            that._logger.log('debug', LOG_ID + "createQueue() - all works have been processed");
+        });
+
+        this._queue.error(function (err, work) {
+            that._logger.log("error", LOG_ID + "createQueue() - work " + work.id + "experienced an error: ", err);
+        });
 
         this._logger.log("debug", LOG_ID + "createQueue() - Exit");
+    }
+
+    rejectExpiredWork(work, timeout) {
+        return (() => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => reject(`the Work ${work.id} took too much time, it was cancelled`), timeout * 1000);
+            })
+        })();
     }
 
     executeWork(work) {
@@ -55,7 +71,7 @@ class Queue {
 
         that._logger.log("debug", LOG_ID + "executeWork() - Enter");
 
-        return new Promise((resolve) => {
+        let workPromise = new Promise((resolve) => {
 
             that._logger.log("info", LOG_ID + "executeWork() - Execute work " + work.id + " | " + work.state);
 
@@ -69,7 +85,7 @@ class Queue {
                 case Work.STATE.INPROGRESS:
                     work.move();
                     work.executeStep();
-                    if(work.hasNoMoreStep()) {
+                    if (work.hasNoMoreStep()) {
                         work.next();
                     }
                     that._logger.log("debug", LOG_ID + "executeWork() - Exit");
@@ -91,6 +107,14 @@ class Queue {
                     break;
             }
         });
+
+        if (that._options && this._options.queue && this._options.queue.maxTaskDuration) {
+            let duration = Number.parseInt(this._options.queue.maxTaskDuration, 10)
+            duration = duration < 60 ? duration : 60;
+            return Promise.race([workPromise, that.rejectExpiredWork(work, duration)])
+        } else {
+            return workPromise;
+        }
     }
 
     addToQueue(work) {
@@ -101,6 +125,8 @@ class Queue {
         this._queue.push(work, (err) => {
             if (err) {
                 this._logger.log("error", LOG_ID + "addToQueue() - Error processing " + work.jid);
+                this._logger.log('error', LOG_ID + "addToQueue() - err:" + err);
+                work.abort();
                 return;
             }
             this._logger.log("info", LOG_ID + "addToQueue() - Finished work for " + work.jid);
@@ -108,11 +134,11 @@ class Queue {
             work.queued = false;
 
             this._event.emit("ontaskfinished", work);
-            
+
         });
 
         this._logger.log("debug", LOG_ID + "addToQueue() - Exit");
     }
-} 
+}
 
 module.exports = Queue;
